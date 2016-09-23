@@ -20,8 +20,23 @@ RUN apt-get update -y \
 	fonts-lato \
     fontconfig
 
+# install node 6
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+    curl
+
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+    && apt-get install -y nodejs \
+    && mkdir -p /var/www/.npm \
+    && chown -R www-data:www-data /var/www/.npm
+
+RUN npm install -g pandoc-filter
+
 COPY ./entrypoint.sh /
 COPY ./__rewritelinks.hs /
+COPY ./__rewriteimagesurl.js /
+
+ENV NODE_PATH "/usr/lib/node_modules"
 
 WORKDIR /source
 
