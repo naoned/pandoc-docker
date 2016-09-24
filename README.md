@@ -1,53 +1,79 @@
-# Pandoc Docker Container
+# Pandoc Docker Container for automatic PDF generation from markdown
 
-[Docker](https://www.docker.io/) container for the source distribution of [Pandoc](http://johnmacfarlane.net/pandoc), with Latex tools installed.
+## How it works
 
-    docker run naoned/pandoc
+First of configure one or multiple `pandoc.json` files.
 
-    pandoc [OPTIONS] [FILES]
-    Input formats:  docbook, haddock, html, json, latex, markdown, markdown_github,
-                    markdown_mmd, markdown_phpextra, markdown_strict, mediawiki,
-                    native, opml, rst, textile
-    Output formats: asciidoc, beamer, context, docbook, docx, dzslides, epub, epub3,
-                    fb2, html, html5, json, latex, man, markdown, markdown_github,
-                    markdown_mmd, markdown_phpextra, markdown_strict, mediawiki,
-                    native, odt, opendocument, opml, org, pdf*, plain, revealjs,
-                    rst, rtf, s5, slideous, slidy, texinfo, textile
-                    [*for pdf output, use latex or beamer and -o FILENAME.pdf
+Example : 
+```json
+{
+    "output": [
+        {
+            "name": "install.pdf",
+            "files": [
+                "fr/Installation/*.md"
+            ],
+            "ignore": [
+                "**/summary.md"
+            ]
+        }
+    ],
+    "toc": true,
+    "toc-depth": 2,
+    "chapters": true,
+    "normalize": true,
+    "highlight-style": "tango",
+    "variables": {
+        "documentclass": "report",
+        "geometry:paper": "a4paper",
+        "geometry:margin": "2cm",
+        "lang": "fr",
+        "mainfont": "Lato"
+    }
+}
+```
 
-A `/source` directory is created in the container, which can be mapped for use with relative file paths. Pandoc will always be run from the `/source` directory in the container.
+The `pandoc.json` file declares how the PDF will be generated. What md file to include and what options to set.
+All options set at the **first level will endup as an argument to the pandoc command**.
 
-    docker run -v `pwd`:/source naoned/pandoc -f markdown -t html5 myfile.md -o myfile.html
+Check the [Pandoc user guide](http://pandoc.org/MANUAL.html) for the different arguments available.
 
-## Preconfigured PDF generation
+Basicly any key found in the json will be prefixed with `--` and passed as an argument. Therefore we don't support shorthand arguments.
 
-You can run
+You can declare multiple PDF files to generate in `output`. You can also override global arguments in `output`.
+
+For example here we disable the table of content for the second pdf only :
+```json
+{
+    "output": [
+        {
+            "name": "install.pdf",
+            "files": [
+                "fr/Installation/*.md"
+            ]
+        }
+        {
+            "name": "uninstall.pdf",
+            "files": [
+                "fr/Removal/*.md"
+            ],
+            "toc": false,
+            "toc-depth": false
+        }
+    ],
+    "toc": true,
+    "toc-depth": 2
+}
+```
+
+The files paths are interpreted from the base path of the `pandoc.json` file. You may use glob patterns as defined [here](https://github.com/isaacs/node-glob)
+
+Run the following command in the folder you want to scan for `pandoc.json` files.
 ```bash
-docker run -v `pwd`:/source naoned/pandoc docs
+docker run --rm -v `pwd`:/source naoned/pandoc
 ```
 
-And if the mounted folder in source matches the following structure, pdfs will be generated:
-```
-- languagecode
-    - pdfname
-        - mdfile.md (may be in subdir)
-```
-
-Example :
-```
-- en
-    - First PDF name
-        - firstpdfchapter.md
-        - secondpdfchapter.md
-            - subdir
-                - anotherchapter.md
-    - Second PDF name
-        - chapter1.md
-        - chapter2.md
-- fr
-    - ...
-- ...
-```
+The pdfs will be generated next to the `pandoc.json` file that declared them.
 
 ## Remark about markdown
 
