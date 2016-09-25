@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+# This script needs to run as root for pandoc to be available
+process.umask(002); // Make new file group+user editable
+
 // Dependencies
 const fs            = require("fs");
 const Promise       = require('promise')
