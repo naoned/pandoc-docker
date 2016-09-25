@@ -220,7 +220,7 @@ function fixImagesPath(content, filePath) {
 }
 
 function removeIgnoreLignes(content) {
-    return content.replace(/<!-- pandoc-ignore-start -->[\S\s]*<!-- pandoc-ignore-end -->/g, '');
+    return content.replace(/<!-- pandoc-ignore-start -->[\S\s]*?<!-- pandoc-ignore-end -->/g, '');
 }
 
 function executeCommands(configs) {
