@@ -200,7 +200,7 @@ function concatFiles(fileList, pdfName) {
     var promise = new Promise((resolve, reject) => {
         fileList.forEach((filePath, i) => {
             pReadFile(filePath, 'utf8').then((content) => {
-                output += fixImagesPath(content, filePath);
+                output += removeIgnoreLignes(fixImagesPath(content, filePath));
                 if(fileList.length === i + 1) {
                     pWriteFile('/tmp/' + pdfName + '.md', output).then(() => {
                         resolve('/tmp/' + pdfName + '.md');
@@ -217,6 +217,10 @@ function fixImagesPath(content, filePath) {
     const root = filePath.replace(/[^\/]+\.[^.]*$/, '');
 
     return content.replace(/(!\[.*?\])\(((?!http:\/\/)(?!https:\/\/)(?!\/).*?)\)/g, `$1(${root}$2)`);
+}
+
+function removeIgnoreLignes(content) {
+    return content.replace(/<!-- pandoc-ignore-start -->[\S\s]*<!-- pandoc-ignore-end -->/g, '');
 }
 
 function executeCommands(configs) {

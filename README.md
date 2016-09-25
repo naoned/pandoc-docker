@@ -49,13 +49,13 @@ For example here we disable the table of content for the second pdf only :
         {
             "name": "install.pdf",
             "files": [
-                "fr/Installation/*.md"
+                "Installation/*.md"
             ]
-        }
+        },
         {
             "name": "uninstall.pdf",
             "files": [
-                "fr/Removal/*.md"
+                "Removal/*.md"
             ],
             "toc": false,
             "toc-depth": false
