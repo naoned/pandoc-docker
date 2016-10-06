@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-# This script needs to run as root for pandoc to be available
+// This script needs to run as root for pandoc to be available
 process.umask(002); // Make new file group+user editable
 
 // Dependencies
@@ -38,7 +38,7 @@ function readPandocConfigFiles(files) {
                     });
                     if (files.length === index + 1) {
                         resolve(configs);
-                    } 
+                    }
                 });
             });
         }
@@ -48,7 +48,7 @@ function readPandocConfigFiles(files) {
 }
 
 function buildPdfConfigs(pandocConfigs) {
-    var pdfConfigs = [];    
+    var pdfConfigs = [];
     pandocConfigs = pandocConfigs.filter(validateConfig);
     pandocConfigs.forEach((config) => {
         if(util.isArray(config.data.output)) {
@@ -123,7 +123,7 @@ function buildPandocCommand(config) {
             '--filter',
             '/__rewritelinks.hs',
             '--from',
-            'markdown_github',
+            'markdown_github+yaml_metadata_block',
             '--to',
             'latex',
             '--latex-engine',
