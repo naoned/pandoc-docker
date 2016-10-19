@@ -199,7 +199,7 @@ function buildFileList(pdfRoot, findList) {
 }
 
 function concatFiles(fileList, pdfName) {
-    output = '';
+    var output = '';
     var promise = new Promise((resolve, reject) => {
         fileList.forEach((filePath, i) => {
             pReadFile(filePath, 'utf8').then((content) => {
