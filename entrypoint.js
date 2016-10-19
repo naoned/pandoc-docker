@@ -233,7 +233,9 @@ function executeCommands(configs) {
             if(err) {
                 console.log(err);
                 console.log(out);
-            }
+            } else {
+ 		console.log(out);
+	    }
         });
     });
 }

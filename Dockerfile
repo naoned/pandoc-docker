@@ -32,6 +32,10 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
 
 RUN npm install -g glob promise array-unique deep-assign
 
+RUN apt-get update && apt-get install -y fonts-fantasque-sans \
+    fonts-inconsolata \
+    fonts-cantarell
+
 COPY ./entrypoint.js /
 COPY ./__rewritelinks.hs /
 
